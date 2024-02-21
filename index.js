@@ -17,7 +17,7 @@ const on = async () => {
 	if(config.signal.enable){
 		mainLogger.mark('启动 Signal 服务器...');
 		await import('./src/signalServer.js');
-		// await sleep(1000);
+		await sleep(100);
 	}
 
 	if(config.server.enable){

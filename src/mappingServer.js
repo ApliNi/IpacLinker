@@ -219,7 +219,7 @@ export default class MappingServer {
 			const socket2server = this.net({port: parseInt(serverPort)}, () => {
 				// 代理协议 v2
 				if(this.li.proxy_protocol_v2){
-					const ip = this.clientList[uuid].ip;
+					const ip = this.clientList[uuid].ip || '127.0.0.1';
 					if(isIPv6(ip)){
 						socket2server.write(`PROXY TCP6 ${ip} ::1 1024 1024\r\n`);
 					}else{
@@ -227,11 +227,11 @@ export default class MappingServer {
 					}
 				}
 				// 'connect' listener
-				if (this.clientList[uuid] && this.clientList[uuid].subclientList) {
+				if (this.clientList[uuid].subclientList) {
 					this.clientList[uuid].subclientList[channel].connected2LocalServer = true
 				}
 				this.logger.info(`连接到本地服务器: Client[${uuid}].[${channel}]`);
-				resolve(true)
+				resolve(true);
 			});
 			socket2server.on('data', async (data) => { // data is a Buffer
 				// this.clientList[uuid].subclientList[channel].sendBufList.push(data)

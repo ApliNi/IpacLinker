@@ -1,7 +1,7 @@
-mode con cols=80 lines=20
+:: mode con cols=80 lines=20
 
 @echo off
 
-title IpacLinkerForIpacEL
+title IpacLinker
 
 node.exe index.js
