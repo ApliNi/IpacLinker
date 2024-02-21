@@ -1,0 +1,4 @@
+node_modules
+*.exe
+*.zip
+package-lock.json
