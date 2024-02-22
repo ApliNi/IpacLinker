@@ -2,3 +2,4 @@ node_modules
 *.exe
 *.zip
 package-lock.json
+ERROR.LOG

@@ -206,7 +206,7 @@ class WebRTC extends EventEmitter {
 		} else {
 			// TODO: we have issue that data channel close won't close socket server, 
 			//			 which leads to contineous sending data from socket server.
-			// this.logger.error(`sendBuf: Data channel with label '${label}' does not exist.`);
+			this.logger.debug(`ERROR: 通道 Channel[${label}] 不存在, 在发送数据时`);
 		}
 	}
 
@@ -223,7 +223,9 @@ class WebRTC extends EventEmitter {
 			const message = this.messageQueues[label].shift();
 			if(this.dataChannels[label].opened){
 				// this.logger.info(`sendMessageBinary buf`);
-				this.dataChannels[label].dc.sendMessageBinary(message);
+				try{
+					this.dataChannels[label].dc.sendMessageBinary(message);
+				}catch(err){}
 			}else{
 				this.logger.warn(`_tryToSend: 通道 ${label} 已关闭`);
 				return;

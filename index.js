@@ -1,9 +1,10 @@
 
 import MappingServer from './src/mappingServer.js';
 import MappingClient from './src/mappingClient.js';
-import { Logger } from './src/logger.js';
+import { Logger, getTime } from './src/logger.js';
 import { Config } from './config.js';
 import { getUUID, sleep } from './src/util.js';
+import fs from 'fs';
 
 // 防止运行过程中配置文件更新
 export const config = Config;
@@ -98,3 +99,9 @@ const on = async () => {
 	}
 };
 on();
+
+process.on('uncaughtException', (err) => {
+	console.error(err);
+	fs.appendFile('./ERROR.LOG', `\n[${getTime()}]: ${err.stack}\n`, (err) => {});
+	// setInterval(() => {}, 1000);
+});

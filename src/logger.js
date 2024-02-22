@@ -39,7 +39,7 @@ export class Logger {
 };
 
 
-function getTime(){
+export const getTime = () => {
 	let time = new Date();
 	return	time.getHours().toString().padStart(2, '0')
 			+':'+

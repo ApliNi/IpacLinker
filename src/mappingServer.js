@@ -60,13 +60,13 @@ export default class MappingServer {
 				}
 
 				case 'client_unregister': {
-					logger.info(`客户端注销[${data.ip}]: Client[${data.uuid}]`);
 					if(!this.clientList[data.uuid]){
 						return;
 					}
 					if(this.clientList[data.uuid].peerAnswer !== null){
 						return;
 					}else{
+						logger.info(`客户端注销[${this.clientList[data.uuid].ip}]: Client[${data.uuid}]`);
 						delete this.clientList[data.uuid];
 					}
 					break;
@@ -219,7 +219,7 @@ export default class MappingServer {
 			const socket2server = this.net({port: parseInt(serverPort)}, () => {
 				// 代理协议 v2
 				if(this.li.proxy_protocol_v2){
-					const ip = this.clientList[uuid].ip || '127.0.0.1';
+					const ip = this.clientList[uuid]?.ip || '127.0.0.1';
 					if(isIPv6(ip)){
 						socket2server.write(`PROXY TCP6 ${ip} ::1 1024 1024\r\n`);
 					}else{
@@ -227,7 +227,7 @@ export default class MappingServer {
 					}
 				}
 				// 'connect' listener
-				if (this.clientList[uuid].subclientList) {
+				if (this.clientList[uuid]?.subclientList) {
 					this.clientList[uuid].subclientList[channel].connected2LocalServer = true
 				}
 				this.logger.info(`连接到本地服务器: Client[${uuid}].[${channel}]`);
@@ -235,8 +235,8 @@ export default class MappingServer {
 			});
 			socket2server.on('data', async (data) => { // data is a Buffer
 				// this.clientList[uuid].subclientList[channel].sendBufList.push(data)
-				if (this.clientList[uuid]) {
-					this.clientList[uuid].peerAnswer.sendBuf(data, channel)
+				if(this.clientList[uuid]?.peerAnswer){
+					this.clientList[uuid].peerAnswer.sendBuf(data, channel);
 				}
 			});
 			socket2server.on('end', () => {
@@ -256,14 +256,12 @@ export default class MappingServer {
 				this.logger.error(`连接到本地服务器时出错: ${err}`)
 				if (this.clientList[uuid] && channel in this.clientList[uuid].subclientList) {
 					// this.clientList[uuid].peerAnswer.closeDataChannel(channel)
-					delete this.clientList[uuid].subclientList[channel]
+					delete this.clientList[uuid].subclientList[channel];
 				}
 				resolve(false)
 			});
 			if (this.clientList[uuid]) {
-				this.clientList[uuid].subclientList[channel] = {
-					socket2server,
-				}
+				this.clientList[uuid].subclientList[channel] = {socket2server: socket2server}
 			} else {
 				this.logger.error(`uuid ${uuid} 不存在于 this.clientList: ${Object.keys(this.clientList)}`)
 			}

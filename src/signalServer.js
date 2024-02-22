@@ -200,7 +200,9 @@ io.on('connection', (socket) => {
 		switch(inp.type){
 			case 'CLIENT':
 				// 向服务器发送客户端断开连接的消息
-				io.to(map.server[inp.server].ws).emit('msg', {type: 'client_unregister', data: {uuid: inp.uuid}});
+				if(map.server[inp.server]){
+					io.to(map.server[inp.server].ws).emit('msg', {type: 'client_unregister', data: {uuid: inp.uuid}});
+				}
 				delete map.server[inp.server].list[inp.uuid];
 				break;
 			case 'SERVER':

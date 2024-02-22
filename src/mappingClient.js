@@ -26,7 +26,8 @@ export default class MappingClient {
 
 		this.net.on('connection', (c) => {
 			let channel = `#${++this.channel}`;
-			this.logger.info(`[NET] 来自应用程序的连接: Channel[${channel}], peer_connected: ${this.peer_connected}`);
+			this.logger.info(`[NET] <-> Channel[${channel}]`);
+			this.logger.debug(`[NET] peer_connected: ${this.peer_connected}`);
 			if(this.peer_connected){
 				this.setupClientSocket(c, channel);
 			}else{
@@ -135,7 +136,7 @@ export default class MappingClient {
 				break;
 			case 'serverMsg':
 				// 服务器自定义消息
-				this.logger.mark(`[服务端]: ${buf}`);
+				this.logger.mark(`[服务器]: ${buf}`);
 				break;
 			case 'remoteServer_connected':
 				// Handle remote server connected event

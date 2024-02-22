@@ -4,4 +4,8 @@
 
 title IpacLinker
 
+:s
+
 node.exe index.js
+
+goto s
